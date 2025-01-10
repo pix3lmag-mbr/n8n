@@ -8,16 +8,6 @@ on:
     branches:
       - master
   workflow_dispatch:
-    inputs:
-      node_version:
-        description: 'Node.js version to build this image with.'
-        type: choice
-        required: true
-        default: '20'
-        options:
-          - '18'
-          - '20'
-          - '22'
 
 jobs:
   build:
@@ -26,9 +16,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3.0.0
-
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
@@ -36,15 +23,15 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://drn8n.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_19fbaf603a9e480eb1724fb56df80277 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_dced2ebec5d64f70a74b560b28f9412d }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_3005a65de57f4f6eb055260dcff51360 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_db2f3d118d2640418db7efe09b92f9d6 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: drn8n.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_19fbaf603a9e480eb1724fb56df80277 }}/pm-n8n:${{ github.sha }}
-        file: ./docker/images/n8n-base/Dockerfile
+        tags: drn8n.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3005a65de57f4f6eb055260dcff51360 }}/pm-n8n:${{ github.sha }}
+        file: ./Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
@@ -60,5 +47,5 @@ jobs:
       with:
         app-name: 'pm-n8n'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_8acaaf50ab6a40a9a7d064a4b91f77ee }}
-        images: 'drn8n.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_19fbaf603a9e480eb1724fb56df80277 }}/pm-n8n:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_f136065459a044a29d4c853479374986 }}
+        images: 'drn8n.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3005a65de57f4f6eb055260dcff51360 }}/pm-n8n:${{ github.sha }}'
